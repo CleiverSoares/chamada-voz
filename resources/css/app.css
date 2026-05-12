@@ -1,47 +1,198 @@
 @import 'tailwindcss';
 
-@theme {
-    --color-alterdata-blue: #0066CC;
-    --color-alterdata-dark: #003D7A;
-    --color-alterdata-light: #4D94FF;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+@theme {
+    --color-alterdata-blue: #0667DA;
+    --color-alterdata-dark: #044BA8;
+    --color-alterdata-light: #3D8EF7;
+}
 
 body {
     font-family: 'Inter', sans-serif;
+    background: #0a0e27;
 }
 
+/* Gradiente futurista */
 .gradient-bg {
-    background: linear-gradient(135deg, #0066CC 0%, #003D7A 100%);
+    background: linear-gradient(135deg, #0667DA 0%, #044BA8 50%, #0a0e27 100%);
+    position: relative;
+    overflow: hidden;
 }
 
+.gradient-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(6, 103, 218, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(61, 142, 247, 0.2) 0%, transparent 50%);
+    animation: pulse-gradient 8s ease-in-out infinite;
+}
+
+@keyframes pulse-gradient {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Efeito de brilho neon */
+.neon-glow {
+    box-shadow: 
+        0 0 20px rgba(6, 103, 218, 0.5),
+        0 0 40px rgba(6, 103, 218, 0.3),
+        0 0 60px rgba(6, 103, 218, 0.1);
+}
+
+.neon-text {
+    text-shadow: 
+        0 0 10px rgba(6, 103, 218, 0.8),
+        0 0 20px rgba(6, 103, 218, 0.6),
+        0 0 30px rgba(6, 103, 218, 0.4);
+}
+
+/* Card futurista com glassmorphism */
+.glass-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 8px 32px 0 rgba(6, 103, 218, 0.2),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(6, 103, 218, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 
+        0 12px 48px 0 rgba(6, 103, 218, 0.4),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Animações */
 .pulse-animation {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: .5;
-    }
+    0%, 100% { opacity: 1; }
+    50% { opacity: .5; }
 }
 
 .slide-in {
-    animation: slideIn 0.5s ease-out;
+    animation: slideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Botão futurista */
+.btn-futuristic {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0667DA, #3D8EF7);
+    transition: all 0.3s ease;
+}
+
+.btn-futuristic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-futuristic:hover::before {
+    left: 100%;
+}
+
+.btn-futuristic:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 40px rgba(6, 103, 218, 0.6);
+}
+
+/* Grid animado de fundo */
+.grid-bg {
+    background-image: 
+        linear-gradient(rgba(6, 103, 218, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(6, 103, 218, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: grid-move 20s linear infinite;
+}
+
+@keyframes grid-move {
+    0% { background-position: 0 0; }
+    100% { background-position: 50px 50px; }
+}
+
+/* Efeito de scan futurista */
+.scan-line {
+    position: relative;
+    overflow: hidden;
+}
+
+.scan-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(transparent, rgba(6, 103, 218, 0.3), transparent);
+    animation: scan 3s ease-in-out infinite;
+}
+
+@keyframes scan {
+    0% { top: -100%; }
+    50% { top: 100%; }
+    100% { top: 100%; }
+}
+
+/* Floating Navigation Buttons */
+.nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, rgba(6, 103, 218, 0.2) 0%, rgba(10, 14, 39, 0.9) 100%);
+    border: 1px solid rgba(6, 103, 218, 0.4);
+    border-radius: 12px;
+    color: #0667DA;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.nav-btn:hover {
+    background: linear-gradient(135deg, rgba(6, 103, 218, 0.4) 0%, rgba(10, 14, 39, 1) 100%);
+    border-color: #0667DA;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(6, 103, 218, 0.4);
+    color: white;
 }
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';

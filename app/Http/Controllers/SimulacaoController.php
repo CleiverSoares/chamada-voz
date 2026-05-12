@@ -37,7 +37,7 @@ class SimulacaoController extends Controller
         $request->validate([
             'persona' => 'required|string',
             'vendedor_nome' => 'required|string|max:255',
-            'duracao' => 'required|integer|min:60|max:600',
+            'duracao' => 'required|integer|min:10|max:600',
         ]);
 
         $simulacao = Simulacao::create([

@@ -22,9 +22,13 @@ const timerEl = document.getElementById('timer');
 const timerContainer = document.getElementById('timer-container');
 const timerInfo = document.getElementById('timer-info');
 const transcriptEl = document.getElementById('transcript');
-const iconWaiting = document.getElementById('icon-waiting');
-const iconSpeaking = document.getElementById('icon-speaking');
-const iconListening = document.getElementById('icon-listening');
+const statusPulse = document.getElementById('status-pulse');
+const statusRing = document.getElementById('status-ring');
+const voiceStatus = document.getElementById('voice-status');
+const voiceSubtitle = document.getElementById('voice-subtitle');
+const loadingOverlay = document.getElementById('loading-overlay');
+const loadingText = document.getElementById('loading-text');
+const loadingSubtitle = document.getElementById('loading-subtitle');
 
 // Inicializar Vapi
 try {
@@ -36,29 +40,55 @@ try {
 }
 
 // Iniciar chamada
-btnStart.addEventListener('click', async () => {
-    if (!vapi) {
-        alert('Sistema de voz não está disponível. Recarregue a página.');
-        return;
-    }
-    
-    try {
-        console.log('🎤 Iniciando chamada com assistente:', ASSISTANT_ID);
-        await vapi.start(ASSISTANT_ID);
-        btnStart.classList.add('hidden');
-        btnEnd.classList.remove('hidden');
-        startTimer();
-        updateStatus('Conectando...', 'Estabelecendo conexão com a IA', 'listening');
-    } catch (error) {
-        console.error('❌ Erro ao iniciar:', error);
-        alert('Erro ao iniciar a chamada: ' + error.message + '\n\nVerifique:\n1. Chave pública da Vapi no .env\n2. ID do assistente configurado\n3. Permissão do microfone');
-    }
-});
+if (btnStart) {
+    btnStart.addEventListener('click', async () => {
+        if (!vapi) {
+            alert('Sistema de voz não está disponível. Recarregue a página.');
+            return;
+        }
+        
+        // Mostrar loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+            if (loadingText) loadingText.textContent = 'Conectando...';
+            if (loadingSubtitle) loadingSubtitle.textContent = 'Estabelecendo conexão com a IA';
+        }
+        
+        try {
+            console.log('🎤 Iniciando chamada com assistente:', ASSISTANT_ID);
+            await vapi.start(ASSISTANT_ID);
+            
+            // Esconder loading
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+            
+            btnStart.classList.add('hidden');
+            if (btnEnd) btnEnd.classList.remove('hidden');
+            startTimer();
+            updateStatus('Conectando...', 'Estabelecendo conexão com a IA');
+            if (voiceStatus) voiceStatus.textContent = 'Conectando...';
+            if (voiceSubtitle) voiceSubtitle.textContent = 'Aguarde enquanto estabelecemos a conexão';
+        } catch (error) {
+            console.error('❌ Erro ao iniciar:', error);
+            // Esconder loading em caso de erro
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+            alert('Erro ao iniciar a chamada: ' + error.message + '\n\nVerifique:\n1. Chave pública da Vapi no .env\n2. ID do assistente configurado\n3. Permissão do microfone');
+        }
+    });
+}
 
 // Encerrar chamada
-btnEnd.addEventListener('click', () => {
-    encerrarChamada();
-});
+if (btnEnd) {
+    btnEnd.addEventListener('click', () => {
+        // Mostrar loading overlay
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('hidden');
+            if (loadingText) loadingText.textContent = 'Encerrando...';
+            if (loadingSubtitle) loadingSubtitle.textContent = 'Processando análise do desempenho';
+        }
+        
+        encerrarChamada();
+    });
+}
 
 function encerrarChamada() {
     if (!vapi) {
@@ -69,8 +99,9 @@ function encerrarChamada() {
     try {
         vapi.stop();
         stopTimer();
-        updateStatus('Encerrando...', 'Processando análise do desempenho', 'waiting');
-        btnEnd.disabled = true;
+        updateStatus('Encerrando...', 'Processando análise do desempenho');
+        if (voiceStatus) voiceStatus.textContent = 'Processando...';
+        if (voiceSubtitle) voiceSubtitle.textContent = 'Aguarde enquanto analisamos seu desempenho';
         
         // Aguardar resultado e redirecionar automaticamente
         aguardarResultado();
@@ -86,6 +117,12 @@ function aguardarResultado() {
     
     console.log('⏳ Aguardando resultado da análise...');
     
+    // Atualizar loading para mostrar que está processando
+    if (loadingOverlay && !loadingOverlay.classList.contains('hidden')) {
+        if (loadingText) loadingText.textContent = 'Processando Análise...';
+        if (loadingSubtitle) loadingSubtitle.textContent = 'A IA está avaliando seu desempenho';
+    }
+    
     const checkInterval = setInterval(() => {
         tentativas++;
         console.log(`🔍 Verificando resultado... (tentativa ${tentativas}/${maxTentativas})`);
@@ -100,7 +137,15 @@ function aguardarResultado() {
                     console.log('✅ Resultado pronto! Redirecionando em 2 segundos...');
                     
                     // Feedback visual
-                    updateStatus('✅ Análise Concluída!', 'Redirecionando para o resultado...', 'waiting');
+                    updateStatus('✅ Análise Concluída!', 'Redirecionando para o resultado...');
+                    if (voiceStatus) voiceStatus.textContent = '✅ Análise Concluída!';
+                    if (voiceSubtitle) voiceSubtitle.textContent = 'Redirecionando...';
+                    
+                    // Atualizar loading
+                    if (loadingOverlay && !loadingOverlay.classList.contains('hidden')) {
+                        if (loadingText) loadingText.textContent = '✅ Análise Concluída!';
+                        if (loadingSubtitle) loadingSubtitle.textContent = 'Redirecionando para o resultado...';
+                    }
                     
                     // Aguarda 2 segundos para o usuário ver
                     setTimeout(() => {
@@ -127,23 +172,59 @@ function aguardarResultado() {
 if (vapi) {
     vapi.on('call-start', () => {
         console.log('📞 Chamada iniciada');
-        updateStatus('Chamada Ativa', 'Você está falando com a IA', 'speaking');
-        transcriptEl.innerHTML = '';
+        updateStatus('Chamada Ativa', 'Você está falando com a IA');
+        if (transcriptEl) transcriptEl.innerHTML = '';
+        if (voiceStatus) voiceStatus.textContent = 'Chamada Ativa';
+        if (voiceSubtitle) voiceSubtitle.textContent = 'Fale naturalmente no microfone';
+        
+        // Status indicator verde
+        if (statusPulse) {
+            statusPulse.classList.remove('bg-gray-600', 'bg-yellow-500');
+            statusPulse.classList.add('bg-green-500');
+        }
+        if (statusRing) {
+            statusRing.classList.remove('bg-gray-600', 'bg-yellow-500', 'opacity-0');
+            statusRing.classList.add('bg-green-500', 'opacity-75');
+        }
     });
     
     vapi.on('speech-start', () => {
         console.log('🤖 IA começou a falar');
-        updateStatus('IA Falando', 'Ouça atentamente a resposta', 'listening');
+        updateStatus('IA Falando', 'Ouça atentamente a resposta');
+        if (voiceStatus) voiceStatus.textContent = '🤖 IA Falando';
+        if (voiceSubtitle) voiceSubtitle.textContent = 'Ouça atentamente';
+        
+        // Status indicator azul
+        if (statusPulse) {
+            statusPulse.classList.remove('bg-gray-600', 'bg-green-500');
+            statusPulse.classList.add('bg-blue-500');
+        }
+        if (statusRing) {
+            statusRing.classList.remove('bg-gray-600', 'bg-green-500');
+            statusRing.classList.add('bg-blue-500');
+        }
     });
     
     vapi.on('speech-end', () => {
         console.log('🎤 IA parou de falar');
-        updateStatus('Sua Vez', 'Fale agora no microfone', 'speaking');
+        updateStatus('Sua Vez', 'Fale agora no microfone');
+        if (voiceStatus) voiceStatus.textContent = '🎤 Sua Vez';
+        if (voiceSubtitle) voiceSubtitle.textContent = 'Fale agora';
+        
+        // Status indicator verde
+        if (statusPulse) {
+            statusPulse.classList.remove('bg-gray-600', 'bg-blue-500');
+            statusPulse.classList.add('bg-green-500');
+        }
+        if (statusRing) {
+            statusRing.classList.remove('bg-gray-600', 'bg-blue-500');
+            statusRing.classList.add('bg-green-500');
+        }
     });
     
     vapi.on('message', (message) => {
         console.log('💬 Mensagem recebida:', message);
-        if (message.type === 'transcript' && message.transcript) {
+        if (message.type === 'transcript' && message.transcript && transcriptEl) {
             const role = message.role === 'user' ? 'Você' : 'Cliente';
             const color = message.role === 'user' ? 'text-blue-300' : 'text-green-300';
             transcriptEl.innerHTML += `<p><span class="${color} font-bold">${role}:</span> ${message.transcript}</p>`;
@@ -153,34 +234,42 @@ if (vapi) {
     
     vapi.on('call-end', () => {
         console.log('📴 Chamada encerrada');
-        updateStatus('Chamada Encerrada', 'Aguarde o resultado...', 'waiting');
+        updateStatus('Chamada Encerrada', 'Aguarde o resultado...');
         stopTimer();
+        if (voiceStatus) voiceStatus.textContent = 'Chamada Encerrada';
+        if (voiceSubtitle) voiceSubtitle.textContent = 'Processando análise...';
+        
+        // Status indicator cinza
+        if (statusPulse) {
+            statusPulse.classList.remove('bg-green-500', 'bg-blue-500');
+            statusPulse.classList.add('bg-gray-600');
+        }
+        if (statusRing) {
+            statusRing.classList.remove('bg-green-500', 'bg-blue-500');
+            statusRing.classList.add('bg-gray-600', 'opacity-0');
+        }
     });
     
     vapi.on('error', (error) => {
         console.error('❌ Erro Vapi:', error);
-        updateStatus('Erro', 'Ocorreu um problema na chamada', 'waiting');
+        updateStatus('Erro', 'Ocorreu um problema na chamada');
+        if (voiceStatus) voiceStatus.textContent = '❌ Erro';
+        if (voiceSubtitle) voiceSubtitle.textContent = 'Ocorreu um problema';
         alert('Erro na chamada: ' + (error.message || 'Erro desconhecido'));
     });
 } else {
     console.error('❌ Vapi não foi inicializado');
-    btnStart.disabled = true;
-    btnStart.textContent = '❌ Sistema Indisponível';
-    statusDescription.textContent = 'Erro ao carregar o sistema de voz';
+    if (btnStart) {
+        btnStart.disabled = true;
+        btnStart.textContent = '❌ Sistema Indisponível';
+    }
+    if (statusDescription) statusDescription.textContent = 'Erro ao carregar o sistema de voz';
 }
 
 // Funções auxiliares
-function updateStatus(title, description, icon) {
-    statusText.textContent = title;
-    statusDescription.textContent = description;
-    
-    iconWaiting.classList.add('hidden');
-    iconSpeaking.classList.add('hidden');
-    iconListening.classList.add('hidden');
-    
-    if (icon === 'speaking') iconSpeaking.classList.remove('hidden');
-    else if (icon === 'listening') iconListening.classList.remove('hidden');
-    else iconWaiting.classList.remove('hidden');
+function updateStatus(title, description) {
+    if (statusText) statusText.textContent = title;
+    if (statusDescription) statusDescription.textContent = description;
 }
 
 function startTimer() {
@@ -197,11 +286,24 @@ function startTimer() {
             clearInterval(timerInterval);
             
             // Feedback visual forte
-            timerEl.textContent = '00:00';
-            timerEl.classList.add('text-red-500', 'animate-pulse');
-            timerContainer.classList.add('bg-red-500/40', 'scale-110');
-            timerInfo.textContent = '⏰ TEMPO ESGOTADO!';
-            timerInfo.classList.add('text-red-300', 'text-xl', 'font-bold');
+            if (timerEl) {
+                timerEl.textContent = '00:00';
+                timerEl.classList.add('text-red-500', 'animate-pulse');
+            }
+            if (timerContainer) {
+                timerContainer.classList.add('scale-110');
+            }
+            if (timerInfo) {
+                timerInfo.textContent = '⏰ TEMPO ESGOTADO!';
+                timerInfo.classList.add('text-red-300', 'text-xl', 'font-bold');
+            }
+            
+            // Mostrar loading overlay
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('hidden');
+                if (loadingText) loadingText.textContent = 'Tempo Esgotado!';
+                if (loadingSubtitle) loadingSubtitle.textContent = 'Encerrando e processando análise...';
+            }
             
             // Aguarda 1 segundo para o usuário ver o feedback
             setTimeout(() => {
@@ -212,29 +314,51 @@ function startTimer() {
         
         const minutes = Math.floor(tempoRestante / 60).toString().padStart(2, '0');
         const seconds = (tempoRestante % 60).toString().padStart(2, '0');
-        timerEl.textContent = `${minutes}:${seconds}`;
+        if (timerEl) timerEl.textContent = `${minutes}:${seconds}`;
         
         // Remover classes anteriores
-        timerEl.classList.remove('text-red-500', 'text-yellow-500', 'text-white');
-        timerContainer.classList.remove('bg-red-500/30', 'bg-yellow-500/30', 'scale-110');
-        timerInfo.classList.remove('text-red-300', 'text-yellow-300', 'text-xl');
+        if (timerEl) {
+            timerEl.classList.remove('text-red-500', 'text-yellow-500', 'text-white');
+        }
+        if (timerContainer) {
+            timerContainer.classList.remove('bg-red-500/30', 'bg-yellow-500/30', 'scale-110', 'scale-125', 'animate-pulse');
+        }
+        if (timerInfo) {
+            timerInfo.classList.remove('text-red-300', 'text-yellow-300', 'text-xl', 'text-2xl', 'font-bold', 'font-black', 'animate-pulse');
+        }
         
         // Mudar cor quando estiver acabando
-        if (tempoRestante <= 30) {
+        if (tempoRestante <= 10) {
+            // VERMELHO PISCANDO - Últimos 10 segundos
+            if (timerEl) {
+                timerEl.classList.add('text-red-500', 'text-7xl', 'animate-pulse');
+            }
+            if (timerContainer) {
+                timerContainer.classList.add('scale-125', 'animate-pulse');
+            }
+            if (timerInfo) {
+                timerInfo.textContent = '🚨 TEMPO ESGOTANDO!';
+                timerInfo.classList.add('text-red-300', 'text-2xl', 'font-black', 'animate-pulse');
+            }
+        } else if (tempoRestante <= 30) {
             // VERMELHO - Últimos 30 segundos
-            timerEl.classList.add('text-red-500', 'text-6xl');
-            timerContainer.classList.add('bg-red-500/30', 'scale-110');
-            timerInfo.textContent = '⚠️ TEMPO ACABANDO!';
-            timerInfo.classList.add('text-red-300', 'text-xl', 'font-bold', 'animate-pulse');
+            if (timerEl) timerEl.classList.add('text-red-500', 'text-6xl');
+            if (timerContainer) timerContainer.classList.add('scale-110');
+            if (timerInfo) {
+                timerInfo.textContent = '⚠️ TEMPO ACABANDO!';
+                timerInfo.classList.add('text-red-300', 'text-xl', 'font-bold');
+            }
         } else if (tempoRestante <= 60) {
             // AMARELO - Último minuto
-            timerEl.classList.add('text-yellow-400', 'text-5xl');
-            timerContainer.classList.add('bg-yellow-500/30', 'scale-105');
-            timerInfo.textContent = '⏰ Menos de 1 minuto';
-            timerInfo.classList.add('text-yellow-300', 'text-lg', 'font-semibold');
+            if (timerEl) timerEl.classList.add('text-yellow-400', 'text-5xl');
+            if (timerContainer) timerContainer.classList.add('scale-105');
+            if (timerInfo) {
+                timerInfo.textContent = '⏰ Menos de 1 minuto';
+                timerInfo.classList.add('text-yellow-300', 'text-lg', 'font-semibold');
+            }
         } else {
             // BRANCO - Normal
-            timerEl.classList.add('text-white');
+            if (timerEl) timerEl.classList.add('text-white');
         }
     }, 1000);
 }
