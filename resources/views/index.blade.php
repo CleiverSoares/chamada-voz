@@ -13,13 +13,13 @@
     </div>
 
     <!-- Main Content -->
-    <div class="relative z-10 flex flex-col items-center justify-center px-6 max-w-6xl mx-auto">
+    <div class="relative z-10 flex flex-col items-center justify-center px-4 sm:px-6 max-w-6xl mx-auto">
         <!-- Holographic Logo -->
-        <div class="mb-12 hologram-float">
+        <div class="mb-8 sm:mb-12 hologram-float">
             <div class="relative">
-                <div class="absolute inset-0 bg-[#0667DA] blur-[100px] opacity-60 animate-pulse-slow"></div>
-                <div class="relative hologram-border p-8 rounded-3xl">
-                    <svg class="w-32 h-32 text-[#0667DA] hologram-glow" fill="currentColor" viewBox="0 0 24 24">
+                <div class="absolute inset-0 bg-[#0667DA] blur-[60px] sm:blur-[100px] opacity-60 animate-pulse-slow"></div>
+                <div class="relative hologram-border p-4 sm:p-8 rounded-2xl sm:rounded-3xl">
+                    <svg class="w-20 h-20 sm:w-32 sm:h-32 text-[#0667DA] hologram-glow" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
                     </svg>
                 </div>
@@ -27,25 +27,25 @@
         </div>
 
         <!-- Title with Glitch Effect -->
-        <h1 class="text-7xl md:text-8xl font-black text-white mb-6 tracking-tighter glitch-text" data-text="SALA DE PERIGO">
+        <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white mb-4 sm:mb-6 tracking-tighter glitch-text text-center" data-text="SALA DE PERIGO">
             SALA DE PERIGO
         </h1>
         
-        <div class="text-center mb-12 max-w-3xl">
-            <p class="text-2xl text-[#0667DA] font-bold mb-3 tracking-wide">TREINAMENTO COM IA</p>
-            <p class="text-lg text-blue-200/90 leading-relaxed">
-                Enfrente clientes simulados por inteligência artificial.<br/>
+        <div class="text-center mb-8 sm:mb-12 max-w-3xl px-4">
+            <p class="text-lg sm:text-xl md:text-2xl text-[#0667DA] font-bold mb-2 sm:mb-3 tracking-wide">TREINAMENTO COM IA</p>
+            <p class="text-sm sm:text-base md:text-lg text-blue-200/90 leading-relaxed">
+                Enfrente clientes simulados por inteligência artificial.<br class="hidden sm:inline"/>
                 Aprimore suas habilidades. Domine a arte da persuasão.
             </p>
         </div>
 
         <!-- CTA Button -->
-        <a href="{{ route('selecionar') }}" class="group relative mb-12">
+        <a href="{{ route('selecionar') }}" class="group relative mb-8 sm:mb-12">
             <div class="absolute -inset-1 bg-gradient-to-r from-[#0667DA] to-[#3D8EF7] rounded-full blur-lg opacity-75 group-hover:opacity-100 transition duration-300 animate-pulse-slow"></div>
-            <button class="relative px-12 py-5 bg-[#0667DA] text-white text-xl font-black rounded-full overflow-hidden transform group-hover:scale-105 transition-all duration-300">
-                <span class="relative z-10 flex items-center space-x-3">
+            <button class="relative px-8 sm:px-12 py-4 sm:py-5 bg-[#0667DA] text-white text-base sm:text-xl font-black rounded-full overflow-hidden transform group-hover:scale-105 transition-all duration-300">
+                <span class="relative z-10 flex items-center space-x-2 sm:space-x-3">
                     <span>INICIAR MISSÃO</span>
-                    <svg class="w-7 h-7 group-hover:translate-x-2 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 sm:w-7 sm:h-7 group-hover:translate-x-2 transition-transform" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
                     </svg>
                 </span>
@@ -54,20 +54,20 @@
         </a>
 
         <!-- Stats Bar -->
-        <div class="flex items-center space-x-8 text-center">
+        <div class="flex items-center space-x-4 sm:space-x-8 text-center">
             <div class="stat-item">
-                <div class="text-3xl font-black text-[#0667DA] mb-1">100%</div>
-                <div class="text-xs text-blue-300 uppercase tracking-wider">IA Realista</div>
+                <div class="text-2xl sm:text-3xl font-black text-[#0667DA] mb-1">100%</div>
+                <div class="text-[10px] sm:text-xs text-blue-300 uppercase tracking-wider">IA Realista</div>
             </div>
-            <div class="w-px h-10 bg-blue-500/30"></div>
+            <div class="w-px h-8 sm:h-10 bg-blue-500/30"></div>
             <div class="stat-item">
-                <div class="text-3xl font-black text-[#0667DA] mb-1">2min</div>
-                <div class="text-xs text-blue-300 uppercase tracking-wider">Feedback Rápido</div>
+                <div class="text-2xl sm:text-3xl font-black text-[#0667DA] mb-1">2min</div>
+                <div class="text-[10px] sm:text-xs text-blue-300 uppercase tracking-wider">Feedback Rápido</div>
             </div>
-            <div class="w-px h-10 bg-blue-500/30"></div>
+            <div class="w-px h-8 sm:h-10 bg-blue-500/30"></div>
             <div class="stat-item">
-                <div class="text-3xl font-black text-[#0667DA] mb-1">∞</div>
-                <div class="text-xs text-blue-300 uppercase tracking-wider">Tentativas</div>
+                <div class="text-2xl sm:text-3xl font-black text-[#0667DA] mb-1">∞</div>
+                <div class="text-[10px] sm:text-xs text-blue-300 uppercase tracking-wider">Tentativas</div>
             </div>
         </div>
     </div>

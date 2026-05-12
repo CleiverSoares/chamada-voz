@@ -4,13 +4,13 @@
 
 @section('content')
 <!-- SELECTION: Character Selection Screen (Game-like) -->
-<div class="h-screen w-screen bg-gradient-to-b from-[#0a0e27] via-[#0d1235] to-[#0a0e27] flex items-center justify-center px-6">
+<div class="min-h-screen w-screen bg-gradient-to-b from-[#0a0e27] via-[#0d1235] to-[#0a0e27] flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
     <div class="max-w-7xl mx-auto w-full">
         <!-- Header -->
-        <div class="text-center mb-6">
-            <div class="text-[#0667DA] text-xs font-bold tracking-[0.3em] uppercase mb-1">Missão 01</div>
-            <h1 class="text-5xl font-black text-white mb-2 tracking-tight">SELECIONE SEU OPONENTE</h1>
-            <div class="h-1 w-24 bg-gradient-to-r from-transparent via-[#0667DA] to-transparent mx-auto"></div>
+        <div class="text-center mb-6 sm:mb-8">
+            <div class="text-[#0667DA] text-[10px] sm:text-xs font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-1">Missão 01</div>
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-2 tracking-tight">SELECIONE SEU OPONENTE</h1>
+            <div class="h-1 w-16 sm:w-24 bg-gradient-to-r from-transparent via-[#0667DA] to-transparent mx-auto"></div>
         </div>
 
         <form action="{{ route('iniciar') }}" method="POST" class="space-y-6">
@@ -20,55 +20,55 @@
             <div class="max-w-2xl mx-auto">
                 <div class="relative group">
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-[#0667DA] to-[#3D8EF7] rounded-lg opacity-30 group-hover:opacity-50 blur transition"></div>
-                    <div class="relative bg-[#0d1235] border border-[#0667DA]/30 rounded-lg p-4">
-                        <label class="block text-[#0667DA] font-bold mb-2 text-xs uppercase tracking-wider">Identificação do Agente</label>
+                    <div class="relative bg-[#0d1235] border border-[#0667DA]/30 rounded-lg p-3 sm:p-4">
+                        <label class="block text-[#0667DA] font-bold mb-2 text-[10px] sm:text-xs uppercase tracking-wider">Identificação do Agente</label>
                         <input type="text" name="vendedor_nome" required 
-                            class="w-full px-4 py-3 bg-black/50 border-2 border-[#0667DA]/50 rounded-lg focus:border-[#0667DA] focus:outline-none text-white text-lg font-semibold placeholder-gray-600 transition"
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black/50 border-2 border-[#0667DA]/50 rounded-lg focus:border-[#0667DA] focus:outline-none text-white text-base sm:text-lg font-semibold placeholder-gray-600 transition"
                             placeholder="Digite seu nome de guerra">
                     </div>
                 </div>
             </div>
 
             <!-- Character Selection -->
-            <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            <div class="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
                 @foreach($personas as $key => $persona)
                 <label class="cursor-pointer">
                     <input type="radio" name="persona" value="{{ $key }}" class="hidden persona-radio" required>
-                    <div class="persona-card relative overflow-hidden rounded-2xl transition-all duration-300 border-4 border-gray-700/50 hover:border-gray-600">
-                        <div class="relative p-6 bg-gradient-to-br from-[#0d1235] to-[#0a0e27]">
+                    <div class="persona-card relative overflow-hidden rounded-xl sm:rounded-2xl transition-all duration-300 border-4 border-gray-700/50 hover:border-gray-600">
+                        <div class="relative p-4 sm:p-6 bg-gradient-to-br from-[#0d1235] to-[#0a0e27]">
                             <!-- Character Avatar -->
-                            <div class="mb-4 flex justify-center">
+                            <div class="mb-3 sm:mb-4 flex justify-center">
                                 <div class="relative">
-                                    <div class="w-28 h-28 rounded-full bg-gradient-to-br from-[#0667DA]/20 to-[#044BA8]/20 flex items-center justify-center border-4 border-[#0667DA]/30">
-                                        <span class="text-6xl">{{ $key === 'seu_mario' ? '🏪' : '👩‍💼' }}</span>
+                                    <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-[#0667DA]/20 to-[#044BA8]/20 flex items-center justify-center border-4 border-[#0667DA]/30">
+                                        <span class="text-4xl sm:text-6xl">{{ $key === 'seu_mario' ? '🏪' : '👩‍💼' }}</span>
                                     </div>
-                                    <div class="absolute -top-2 -right-2 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-black uppercase border-2 border-red-800">
+                                    <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-600 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-black uppercase border-2 border-red-800">
                                         {{ $persona['dificuldade'] }}
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Character Info -->
-                            <div class="text-center mb-4">
-                                <h3 class="text-3xl font-black text-white mb-2">{{ $persona['nome'] }}</h3>
-                                <p class="text-blue-300 text-sm leading-relaxed">{{ $persona['descricao'] }}</p>
+                            <div class="text-center mb-3 sm:mb-4">
+                                <h3 class="text-2xl sm:text-3xl font-black text-white mb-1 sm:mb-2">{{ $persona['nome'] }}</h3>
+                                <p class="text-blue-300 text-xs sm:text-sm leading-relaxed">{{ $persona['descricao'] }}</p>
                             </div>
 
                             <!-- Stats -->
-                            <div class="space-y-2 mb-3">
-                                <div class="flex items-center justify-between text-xs">
+                            <div class="space-y-1.5 sm:space-y-2 mb-2 sm:mb-3">
+                                <div class="flex items-center justify-between text-[10px] sm:text-xs">
                                     <span class="text-gray-400 uppercase tracking-wider font-semibold">Dificuldade</span>
                                     <span class="text-[#0667DA] font-bold">{{ $key === 'seu_mario' ? '★★★★☆' : '★★★★★' }}</span>
                                 </div>
-                                <div class="flex items-center justify-between text-xs">
+                                <div class="flex items-center justify-between text-[10px] sm:text-xs">
                                     <span class="text-gray-400 uppercase tracking-wider font-semibold">Resistência</span>
                                     <span class="text-[#0667DA] font-bold">{{ $key === 'seu_mario' ? 'ALTA' : 'EXTREMA' }}</span>
                                 </div>
                             </div>
 
                             <!-- Selection Indicator (always visible) -->
-                            <div class="selection-badge text-center py-2 rounded-lg bg-gray-800/50 border-2 border-gray-700">
-                                <span class="text-gray-500 text-sm font-bold uppercase">Clique para selecionar</span>
+                            <div class="selection-badge text-center py-1.5 sm:py-2 rounded-lg bg-gray-800/50 border-2 border-gray-700">
+                                <span class="text-gray-500 text-xs sm:text-sm font-bold uppercase">Clique para selecionar</span>
                             </div>
                         </div>
                     </div>
@@ -81,20 +81,20 @@
 
             <!-- Duration Selection -->
             <div class="max-w-5xl mx-auto">
-                <div class="text-center mb-4">
-                    <h3 class="text-2xl font-bold text-white mb-1">DURAÇÃO DA MISSÃO</h3>
-                    <p class="text-blue-300 text-sm">Escolha quanto tempo você terá</p>
+                <div class="text-center mb-3 sm:mb-4">
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-1">DURAÇÃO DA MISSÃO</h3>
+                    <p class="text-blue-300 text-xs sm:text-sm">Escolha quanto tempo você terá</p>
                 </div>
-                <div class="grid grid-cols-4 gap-4 mb-4">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
                     @foreach([10 => '10s', 30 => '30s', 60 => '1min', 120 => '2min'] as $seconds => $label)
                     <label class="cursor-pointer">
                         <input type="radio" name="duracao" value="{{ $seconds }}" {{ $seconds == 60 ? 'checked' : '' }} class="hidden duracao-radio">
-                        <div class="duracao-card relative rounded-xl p-4 bg-gradient-to-br from-[#0d1235] to-[#0a0e27] border-4 border-gray-700/50 hover:border-gray-600 transition-all duration-300">
+                        <div class="duracao-card relative rounded-lg sm:rounded-xl p-3 sm:p-4 bg-gradient-to-br from-[#0d1235] to-[#0a0e27] border-4 border-gray-700/50 hover:border-gray-600 transition-all duration-300">
                             <div class="text-center">
-                                <div class="text-4xl font-black text-white mb-1">{{ strpos($label, 's') !== false ? rtrim($label, 's') : rtrim($label, 'min') }}</div>
-                                <div class="text-xs text-blue-300 uppercase tracking-wider font-semibold mb-2">{{ strpos($label, 'min') !== false ? 'min' : 'seg' }}</div>
-                                <div class="duration-badge py-1 px-3 rounded-full bg-gray-800/50 border-2 border-gray-700">
-                                    <span class="text-gray-500 text-xs font-bold uppercase">-</span>
+                                <div class="text-3xl sm:text-4xl font-black text-white mb-0.5 sm:mb-1">{{ strpos($label, 's') !== false ? rtrim($label, 's') : rtrim($label, 'min') }}</div>
+                                <div class="text-[10px] sm:text-xs text-blue-300 uppercase tracking-wider font-semibold mb-1.5 sm:mb-2">{{ strpos($label, 'min') !== false ? 'min' : 'seg' }}</div>
+                                <div class="duration-badge py-0.5 sm:py-1 px-2 sm:px-3 rounded-full bg-gray-800/50 border-2 border-gray-700">
+                                    <span class="text-gray-500 text-[10px] sm:text-xs font-bold uppercase">-</span>
                                 </div>
                             </div>
                         </div>
@@ -125,13 +125,13 @@
             <div class="text-center">
                 <button type="submit" class="group relative inline-block">
                     <div class="absolute -inset-1 bg-gradient-to-r from-[#0667DA] via-[#3D8EF7] to-[#0667DA] rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative px-12 py-4 bg-[#0667DA] text-white text-xl font-black rounded-full overflow-hidden transform group-hover:scale-105 transition-all duration-300 border-2 border-[#3D8EF7]">
-                        <span class="relative z-10 flex items-center space-x-3">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="relative px-8 sm:px-12 py-3 sm:py-4 bg-[#0667DA] text-white text-base sm:text-xl font-black rounded-full overflow-hidden transform group-hover:scale-105 transition-all duration-300 border-2 border-[#3D8EF7]">
+                        <span class="relative z-10 flex items-center space-x-2 sm:space-x-3">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
                             </svg>
                             <span>ENTRAR EM COMBATE</span>
-                            <svg class="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
                             </svg>
                         </span>
