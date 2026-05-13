@@ -106,7 +106,7 @@
                 {{-- <div class="max-w-md mx-auto">
                     <div class="relative group">
                         <div class="absolute -inset-0.5 bg-gradient-to-r from-[#0667DA] to-[#3D8EF7] rounded-lg opacity-20 group-hover:opacity-30 blur transition"></div>
-                        <div class="relative bg-[#0d1235] border border-[#0667DA]/30 rounded-lg p-4">
+                        <div class="relative bg-[#0d1235] border border-[#0667DA]/30 rounded-lg p-4"> 
                             <label class="block text-[#0667DA] font-bold mb-2 text-xs uppercase tracking-wider text-center">⚙️ Tempo Personalizado</label>
                             <div class="flex items-center space-x-3">
                                 <input type="number" id="duracao-custom" min="10" max="600" step="5" placeholder="Ex: 45"
