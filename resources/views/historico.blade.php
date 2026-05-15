@@ -119,10 +119,10 @@
                                     <div class="font-bold text-white">{{ $sim->vendedor_nome }}</div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 hidden sm:table-cell">
                                 <div class="inline-flex items-center space-x-2 px-3 py-1 bg-[#0d1235] border border-[#0667DA]/30 rounded-lg">
-                                    <span class="text-lg">{{ $sim->persona === 'seu_mario' ? '🏪' : '👩‍💼' }}</span>
-                                    <span class="text-sm font-semibold text-white">{{ $sim->persona === 'seu_mario' ? 'Seu Mário' : 'Dona Sônia' }}</span>
+                                    <span class="text-lg">{{ \App\Http\Controllers\SimulacaoController::emojiPersona($sim->persona) }}</span>
+                                    <span class="text-sm font-semibold text-white">{{ \App\Http\Controllers\SimulacaoController::nomePersona($sim->persona) }}</span>
                                 </div>
                             </td>
                             <td class="px-6 py-4">

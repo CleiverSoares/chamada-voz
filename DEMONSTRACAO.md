@@ -51,20 +51,20 @@
 
 **Mostre:**
 - Campo de nome
-- Cards das personas (Seu Mário e Dona Sônia)
+- Cards das personas (Antônio e Sônia)
 - Níveis de dificuldade
 
 **Fala sugerida:**
 
 > "Aqui temos nossas personas. Cada uma tem uma personalidade única:
 >
-> **Seu Mário** - Dono de supermercado. Apressado, desconfiado, focado em custos. Nível: Difícil.
+> **Antônio** - Dono de supermercado. Apressado, desconfiado, focado em custos. Nível: Difícil.
 >
-> **Dona Sônia** - Gerente de loja de roupas. Cética com tecnologia, preocupada com a equipe. Nível: Muito Difícil.
+> **Sônia** - Gerente de loja de roupas. Cética com tecnologia, preocupada com a equipe. Nível: Muito Difícil.
 >
-> Vou enfrentar o Seu Mário hoje."
+> Vou enfrentar o Antônio hoje."
 
-**Digite seu nome e selecione "Seu Mário"**
+**Digite seu nome e selecione "Antônio"**
 
 ---
 
@@ -89,36 +89,36 @@
 
 **Clique em "Iniciar Chamada"**
 
-**Exemplo de conversa com Seu Mário:**
+**Exemplo de conversa com Antônio:**
 
 ---
 
 **Você:** 
-> "Bom dia, Seu Mário! Tudo bem? Meu nome é [seu nome], da Alterdata. Tenho só 2 minutinhos?"
+> "Bom dia, Antônio! Tudo bem? Meu nome é [seu nome], da Alterdata. Tenho só 2 minutinhos?"
 
-**Seu Mário (IA):**
+**Antônio (IA):**
 > "Alô, é rápido? Tô no meio do expediente aqui."
 
 **Você:**
-> "Rapidinho! Sei que seu tempo é precioso. Seu Mário, me diz uma coisa: quanto tempo você perde por dia conferindo estoque e fechando caixa?"
+> "Rapidinho! Sei que seu tempo é precioso. Antônio, me diz uma coisa: quanto tempo você perde por dia conferindo estoque e fechando caixa?"
 
-**Seu Mário:**
+**Antônio:**
 > "Ah, umas 2 horas no final do dia... mas fazer o quê, né?"
 
 **Você:**
 > "E se eu te dissesse que dá pra reduzir isso pra 20 minutos? Nosso sistema da Alterdata automatiza tudo. Você ganha 1 hora e meia por dia. Em um mês, são 45 horas - quase uma semana de trabalho!"
 
-**Seu Mário:**
+**Antônio:**
 > "Mas deve ser caro, né? E complicado de usar..."
 
 **Você:**
 > "Entendo a preocupação. Olha, o investimento se paga em 3 meses só com a economia de tempo. E sobre ser complicado: minha avó de 70 anos usa. É mais simples que WhatsApp. Que tal eu te mostrar em 15 minutos? Posso ir aí amanhã às 14h?"
 
-**Seu Mário:**
+**Antônio:**
 > "Bom... se for rápido mesmo... tá bom."
 
 **Você:**
-> "Fechado! Amanhã 14h. Obrigado, Seu Mário!"
+> "Fechado! Amanhã 14h. Obrigado, Antônio!"
 
 ---
 

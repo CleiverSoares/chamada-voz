@@ -6,7 +6,7 @@ const config = window.vapiConfig || {};
 const VAPI_PUBLIC_KEY = config.publicKey;
 const ASSISTANT_ID = config.assistantId;
 const SIMULACAO_ID = config.simulacaoId;
-const DURACAO_MAXIMA = config.duracaoMaxima || 120; // segundos
+const DURACAO_MAXIMA = config.duracaoMaxima !== undefined && config.duracaoMaxima !== null ? config.duracaoMaxima : 120; // segundos
 
 let vapi;
 let startTime;
@@ -278,6 +278,20 @@ function startTimer() {
     
     timerInterval = setInterval(() => {
         tempoDecorrido = Math.floor((Date.now() - startTime) / 1000);
+        
+        if (DURACAO_MAXIMA === 0) {
+            // Tempo infinito: mostra o relógio contando para cima
+            const minutes = Math.floor(tempoDecorrido / 60).toString().padStart(2, '0');
+            const seconds = (tempoDecorrido % 60).toString().padStart(2, '0');
+            if (timerEl) timerEl.textContent = `${minutes}:${seconds}`;
+            if (timerInfo) {
+                timerInfo.textContent = 'Tempo Livre';
+                timerInfo.classList.add('text-emerald-300');
+            }
+            if (timerEl) timerEl.classList.add('text-white');
+            return;
+        }
+
         const tempoRestante = DURACAO_MAXIMA - tempoDecorrido;
         
         if (tempoRestante <= 0) {

@@ -1,258 +1,171 @@
 @extends('layout')
-
-@section('title', 'Selecionar Persona')
-
+@section('title', 'Seleção de Adversário')
 @section('content')
-<!-- SELECTION: Character Selection Screen (Game-like) -->
-<div class="min-h-screen w-screen bg-gradient-to-b from-[#0a0e27] via-[#0d1235] to-[#0a0e27] flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
-    <div class="max-w-7xl mx-auto w-full">
-        <!-- Header -->
-        <div class="text-center mb-6 sm:mb-8">
-            <div class="text-[#0667DA] text-[10px] sm:text-xs font-bold tracking-[0.2em] sm:tracking-[0.3em] uppercase mb-1">Missão 01</div>
-            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-2 tracking-tight">SELECIONE SEU OPONENTE</h1>
-            <div class="h-1 w-16 sm:w-24 bg-gradient-to-r from-transparent via-[#0667DA] to-transparent mx-auto"></div>
+
+<div class="h-screen w-screen bg-[#060918] overflow-hidden flex flex-col">
+
+    {{-- BG --}}
+    <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute inset-0" style="background:radial-gradient(ellipse 90% 55% at 50% -5%,rgba(6,103,218,.2),transparent 60%)"></div>
+        <div class="absolute inset-0 opacity-[.07]" style="background-image:linear-gradient(rgba(6,103,218,1) 1px,transparent 1px),linear-gradient(90deg,rgba(6,103,218,1) 1px,transparent 1px);background-size:40px 40px"></div>
+    </div>
+
+    {{-- HEADER --}}
+    <div class="relative z-10 shrink-0 text-center pt-16 pb-3">
+        <p class="text-[#0667DA] tracking-[.4em] uppercase font-black text-[10px] mb-1">— Operação Tática —</p>
+        <h1 class="text-3xl font-black text-white tracking-tight">SELECIONE SEU <span class="text-[#0667DA]">ADVERSÁRIO</span></h1>
+        <div class="h-px w-24 mx-auto mt-2 bg-gradient-to-r from-transparent via-[#0667DA] to-transparent"></div>
+    </div>
+
+    <form action="{{ route('iniciar') }}" method="POST" class="relative z-10 flex-1 flex flex-col min-h-0 px-10 pb-8 pt-4 gap-5">
+        @csrf
+
+        {{-- NAME --}}
+        <div class="shrink-0 flex items-center gap-3 rounded-lg border border-[#0667DA]/30 bg-[#0667DA]/5 px-4 py-2.5">
+            <svg class="w-4 h-4 text-[#0667DA] shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+            </svg>
+            <span class="text-[#0667DA] text-[10px] font-black uppercase tracking-widest shrink-0">Agente</span>
+            <div class="w-px h-4 bg-[#0667DA]/30"></div>
+            <input type="text" name="vendedor_nome" required autocomplete="off"
+                class="flex-1 bg-transparent border-none outline-none text-white text-sm font-bold placeholder-gray-600"
+                placeholder="Digite seu nome de guerra...">
         </div>
 
-        <form action="{{ route('iniciar') }}" method="POST" class="space-y-6">
-            @csrf
-            
-            <!-- Player Name Input -->
-            <div class="max-w-2xl mx-auto">
-                <div class="relative group">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-[#0667DA] to-[#3D8EF7] rounded-lg opacity-30 group-hover:opacity-50 blur transition"></div>
-                    <div class="relative bg-[#0d1235] border border-[#0667DA]/30 rounded-lg p-3 sm:p-4">
-                        <label class="block text-[#0667DA] font-bold mb-2 text-[10px] sm:text-xs uppercase tracking-wider">Identificação do Agente</label>
-                        <input type="text" name="vendedor_nome" required 
-                            class="w-full px-3 sm:px-4 py-2 sm:py-3 bg-black/50 border-2 border-[#0667DA]/50 rounded-lg focus:border-[#0667DA] focus:outline-none text-white text-base sm:text-lg font-semibold placeholder-gray-600 transition"
-                            placeholder="Digite seu nome de guerra">
-                    </div>
-                </div>
-            </div>
+        {{-- PERSONA CARDS — 3 colunas --}}
+        <div class="grid grid-cols-3 gap-5 shrink-0">
+            @foreach($personas as $key => $persona)
+            @php
+                $emoji = match($key) { 'seu_mario'=>'🏪', 'dona_sonia'=>'👩‍💼', 'flavio_academia_vendas'=>'🏆', default=>'🎯' };
+                $diffMap = ['Fácil'=>1,'Médio'=>2,'Difícil'=>4,'Muito Difícil'=>5,'Extremo'=>5,'Treinamento'=>3];
+                $bars = $diffMap[$persona['dificuldade']] ?? 4;
+                $tagClass = match($persona['dificuldade']) {
+                    'Fácil'        => 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40',
+                    'Médio'        => 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40',
+                    'Difícil'      => 'bg-orange-500/20 text-orange-400 border-orange-500/40',
+                    'Muito Difícil'=> 'bg-red-500/20 text-red-400 border-red-500/40',
+                    'Treinamento'  => 'bg-blue-500/20 text-blue-400 border-blue-500/40',
+                    default        => 'bg-red-900/30 text-red-300 border-red-700/50',
+                };
+                $barColor = match($persona['dificuldade']) {
+                    'Treinamento' => 'bg-blue-500',
+                    default => match(true) { $bars>=5=>'bg-red-500', $bars>=4=>'bg-orange-500', $bars>=3=>'bg-yellow-500', default=>'bg-emerald-500' }
+                };
+            @endphp
+            <label class="cursor-pointer">
+                <input type="radio" name="persona" value="{{ $key }}" class="hidden persona-radio" required>
+                <div class="p-card relative rounded-2xl border-2 border-white/5 overflow-hidden transition-all duration-250 flex flex-col gap-4 p-5">
 
-            <!-- Character Selection -->
-            <div class="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
-                @foreach($personas as $key => $persona)
-                <label class="cursor-pointer">
-                    <input type="radio" name="persona" value="{{ $key }}" class="hidden persona-radio" required>
-                    <div class="persona-card relative overflow-hidden rounded-xl sm:rounded-2xl transition-all duration-300 border-4 border-gray-700/50 hover:border-gray-600">
-                        <div class="relative p-4 sm:p-6 bg-gradient-to-br from-[#0d1235] to-[#0a0e27]">
-                            <!-- Character Avatar -->
-                            <div class="mb-3 sm:mb-4 flex justify-center">
-                                <div class="relative">
-                                    <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-[#0667DA]/20 to-[#044BA8]/20 flex items-center justify-center border-4 border-[#0667DA]/30">
-                                        <span class="text-4xl sm:text-6xl">{{ $key === 'seu_mario' ? '🏪' : '👩‍💼' }}</span>
-                                    </div>
-                                    <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-red-600 text-white px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-black uppercase border-2 border-red-800">
-                                        {{ $persona['dificuldade'] }}
-                                    </div>
-                                </div>
-                            </div>
+                    {{-- top glow line --}}
+                    <div class="p-line absolute top-0 left-0 right-0 h-[2px] transition-all duration-300 bg-white/5"></div>
 
-                            <!-- Character Info -->
-                            <div class="text-center mb-3 sm:mb-4">
-                                <h3 class="text-2xl sm:text-3xl font-black text-white mb-1 sm:mb-2">{{ $persona['nome'] }}</h3>
-                                <p class="text-blue-300 text-xs sm:text-sm leading-relaxed">{{ $persona['descricao'] }}</p>
-                            </div>
-
-                            <!-- Stats -->
-                            <div class="space-y-1.5 sm:space-y-2 mb-2 sm:mb-3">
-                                <div class="flex items-center justify-between text-[10px] sm:text-xs">
-                                    <span class="text-gray-400 uppercase tracking-wider font-semibold">Dificuldade</span>
-                                    <span class="text-[#0667DA] font-bold">{{ $key === 'seu_mario' ? '★★★★☆' : '★★★★★' }}</span>
-                                </div>
-                                <div class="flex items-center justify-between text-[10px] sm:text-xs">
-                                    <span class="text-gray-400 uppercase tracking-wider font-semibold">Resistência</span>
-                                    <span class="text-[#0667DA] font-bold">{{ $key === 'seu_mario' ? 'ALTA' : 'EXTREMA' }}</span>
-                                </div>
-                            </div>
-
-                            <!-- Selection Indicator (always visible) -->
-                            <div class="selection-badge text-center py-1.5 sm:py-2 rounded-lg bg-gray-800/50 border-2 border-gray-700">
-                                <span class="text-gray-500 text-xs sm:text-sm font-bold uppercase">Clique para selecionar</span>
+                    {{-- header row --}}
+                    <div class="flex items-start justify-between">
+                        <div class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl bg-[#0667DA]/10 border border-[#0667DA]/20">
+                            {{ $emoji }}
+                        </div>
+                        <div class="flex flex-col items-end gap-2">
+                            <span class="text-[10px] font-black uppercase px-2 py-0.5 rounded border {{ $tagClass }}">
+                                {{ $persona['dificuldade'] }}
+                            </span>
+                            <div class="flex gap-1 items-end">
+                                @for($i=0;$i<5;$i++)
+                                <div class="w-2 rounded-sm {{ $i<$bars ? $barColor : 'bg-white/10' }}"
+                                     style="height:{{ 5+$i*4 }}px"></div>
+                                @endfor
                             </div>
                         </div>
+                    </div>
+
+                    {{-- name + desc --}}
+                    <div>
+                        <h3 class="text-white font-black text-lg leading-tight mb-1">{{ $persona['nome'] }}</h3>
+                        <p class="text-gray-500 text-xs leading-relaxed">{{ $persona['descricao'] }}</p>
+                    </div>
+
+                    {{-- select button --}}
+                    <div class="p-badge mt-auto rounded-xl border-2 py-2.5 text-center transition-all duration-250">
+                        <span class="p-badge-label text-[11px] font-black uppercase tracking-wider"></span>
+                    </div>
+
+                </div>
+            </label>
+            @endforeach
+        </div>
+
+        {{-- BOTTOM ROW: tempo + submit --}}
+        <div class="shrink-0 flex items-stretch gap-4">
+
+            {{-- DURATION CARDS --}}
+            <div class="flex-1 flex gap-3">
+                @foreach([10=>'10 seg',30=>'30 seg',60=>'1 min',120=>'2 min',0=>'∞'] as $sec=>$lbl)
+                <label class="flex-1 cursor-pointer">
+                    <input type="radio" name="duracao" value="{{ $sec }}" {{ $sec==60?'checked':'' }} class="hidden duracao-radio">
+                    <div class="d-card h-full flex flex-col items-center justify-center gap-1 rounded-xl border-2 border-white/5 py-3 px-2 transition-all duration-200">
+                        <span class="d-time text-white font-black text-lg leading-none transition-all">{{ $lbl }}</span>
+                        <span class="text-gray-600 text-[10px] uppercase tracking-wider font-bold">{{ $sec==0?'livre':($sec<60?'segundos':'minuto') }}</span>
                     </div>
                 </label>
                 @endforeach
             </div>
-            @error('persona')
-                <p class="text-red-500 text-center text-sm">{{ $message }}</p>
-            @enderror
 
-            <!-- Duration Selection -->
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center mb-3 sm:mb-4">
-                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-1">DURAÇÃO DA MISSÃO</h3>
-                    <p class="text-blue-300 text-xs sm:text-sm">Escolha quanto tempo você terá</p>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4">
-                    @foreach([10 => '10s', 30 => '30s', 60 => '1min', 120 => '2min'] as $seconds => $label)
-                    <label class="cursor-pointer">
-                        <input type="radio" name="duracao" value="{{ $seconds }}" {{ $seconds == 60 ? 'checked' : '' }} class="hidden duracao-radio">
-                        <div class="duracao-card relative rounded-lg sm:rounded-xl p-3 sm:p-4 bg-gradient-to-br from-[#0d1235] to-[#0a0e27] border-4 border-gray-700/50 hover:border-gray-600 transition-all duration-300">
-                            <div class="text-center">
-                                <div class="text-3xl sm:text-4xl font-black text-white mb-0.5 sm:mb-1">{{ strpos($label, 's') !== false ? rtrim($label, 's') : rtrim($label, 'min') }}</div>
-                                <div class="text-[10px] sm:text-xs text-blue-300 uppercase tracking-wider font-semibold mb-1.5 sm:mb-2">{{ strpos($label, 'min') !== false ? 'min' : 'seg' }}</div>
-                                <div class="duration-badge py-0.5 sm:py-1 px-2 sm:px-3 rounded-full bg-gray-800/50 border-2 border-gray-700">
-                                    <span class="text-gray-500 text-[10px] sm:text-xs font-bold uppercase">-</span>
-                                </div>
-                            </div>
-                        </div>
-                    </label>
-                    @endforeach
-                </div>
-                
-                <!-- Custom Duration -->
-                {{-- <div class="max-w-md mx-auto">
-                    <div class="relative group">
-                        <div class="absolute -inset-0.5 bg-gradient-to-r from-[#0667DA] to-[#3D8EF7] rounded-lg opacity-20 group-hover:opacity-30 blur transition"></div>
-                        <div class="relative bg-[#0d1235] border border-[#0667DA]/30 rounded-lg p-4">
-                            <label class="block text-[#0667DA] font-bold mb-2 text-xs uppercase tracking-wider text-center">⚙️ Tempo Personalizado</label>
-                            <div class="flex items-center space-x-3">
-                                <input type="number" id="duracao-custom" min="10" max="600" step="5" placeholder="Ex: 45"
-                                    class="flex-1 px-4 py-3 bg-black/50 border-2 border-[#0667DA]/50 rounded-lg focus:border-[#0667DA] focus:outline-none text-white text-center text-lg font-bold placeholder-gray-600 transition">
-                                <button type="button" id="btn-apply-custom" class="px-6 py-3 bg-[#0667DA] hover:bg-[#3D8EF7] text-white rounded-lg font-bold text-sm uppercase tracking-wider transition-all transform hover:scale-105">
-                                    Aplicar
-                                </button>
-                            </div>
-                            <p class="text-xs text-gray-400 text-center mt-2">Mínimo: 10s | Máximo: 600s (10min)</p>
-                        </div>
-                    </div>
-                </div> --}}
-            </div>
+            {{-- SUBMIT --}}
+            <button type="submit"
+                class="shrink-0 group relative overflow-hidden rounded-xl px-10 font-black text-white text-sm uppercase tracking-widest transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_rgba(6,103,218,.6)]"
+                style="background:linear-gradient(135deg,#0667DA 0%,#3D8EF7 100%)">
+                <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500"></div>
+                <span class="relative flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                    </svg>
+                    Iniciar Combate
+                </span>
+            </button>
 
-            <!-- Submit Button -->
-            <div class="text-center">
-                <button type="submit" class="group relative inline-block">
-                    <div class="absolute -inset-1 bg-gradient-to-r from-[#0667DA] via-[#3D8EF7] to-[#0667DA] rounded-full blur-xl opacity-75 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative px-8 sm:px-12 py-3 sm:py-4 bg-[#0667DA] text-white text-base sm:text-xl font-black rounded-full overflow-hidden transform group-hover:scale-105 transition-all duration-300 border-2 border-[#3D8EF7]">
-                        <span class="relative z-10 flex items-center space-x-2 sm:space-x-3">
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
-                            </svg>
-                            <span>ENTRAR EM COMBATE</span>
-                            <svg class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-2 transition-transform" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
-                            </svg>
-                        </span>
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></div>
-                    </div>
-                </button>
-            </div>
-        </form>
-    </div>
+        </div>
+
+    </form>
 </div>
 
 <style>
-/* Persona selection styles */
-.persona-radio:checked + .persona-card {
+/* PERSONA CARD */
+.p-card {
+    background: linear-gradient(160deg, rgba(13,18,53,.95) 0%, rgba(6,9,24,.98) 100%);
+    cursor: pointer;
+}
+.p-card:hover {
+    border-color: rgba(6,103,218,.35) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(6,103,218,.15);
+}
+.persona-radio:checked + .p-card {
     border-color: #0667DA !important;
-    box-shadow: 0 0 40px rgba(6, 103, 218, 0.6), 0 0 20px rgba(6, 103, 218, 0.4) inset;
-    transform: scale(1.03);
+    transform: translateY(-4px);
+    box-shadow: 0 0 0 1px #0667DA, 0 8px 40px rgba(6,103,218,.35);
 }
+.persona-radio:checked + .p-card .p-line {
+    background: linear-gradient(90deg, transparent, #0667DA, #3D8EF7, transparent);
+}
+.persona-radio:checked + .p-card .p-badge {
+    background: linear-gradient(135deg, #0667DA, #3D8EF7);
+    border-color: #3D8EF7;
+}
+.persona-radio:checked + .p-card .p-badge-label::before { content: "✓  Selecionado"; color: #fff; }
+.persona-radio:not(:checked) + .p-card .p-badge {
+    background: rgba(255,255,255,.03);
+    border-color: rgba(255,255,255,.08);
+}
+.persona-radio:not(:checked) + .p-card .p-badge-label::before { content: "Selecionar"; color: #6B7280; }
 
-.persona-radio:checked + .persona-card .selection-badge {
-    background: linear-gradient(135deg, #0667DA, #3D8EF7) !important;
+/* DURATION CARD */
+.d-card { background: rgba(6,103,218,.04); }
+.d-card:hover { border-color: rgba(6,103,218,.25) !important; }
+.duracao-radio:checked + .d-card {
     border-color: #0667DA !important;
+    background: rgba(6,103,218,.15);
+    box-shadow: 0 0 20px rgba(6,103,218,.25);
 }
-
-.persona-radio:checked + .persona-card .selection-badge span {
-    color: white !important;
-}
-
-.persona-radio:checked + .persona-card .selection-badge span::before {
-    content: "✓ SELECIONADO";
-}
-
-.persona-radio:not(:checked) + .persona-card .selection-badge span::before {
-    content: "Clique para selecionar";
-}
-
-/* Duration selection styles */
-.duracao-radio:checked + .duracao-card {
-    border-color: #0667DA !important;
-    box-shadow: 0 0 30px rgba(6, 103, 218, 0.6);
-    transform: scale(1.05);
-}
-
-.duracao-radio:checked + .duracao-card .duration-badge {
-    background: linear-gradient(135deg, #0667DA, #3D8EF7) !important;
-    border-color: #0667DA !important;
-}
-
-.duracao-radio:checked + .duracao-card .duration-badge span {
-    color: white !important;
-}
-
-.duracao-radio:checked + .duracao-card .duration-badge span::before {
-    content: "✓ ATIVO";
-}
-
-.duracao-radio:not(:checked) + .duracao-card .duration-badge span::before {
-    content: "-";
-}
+.duracao-radio:checked + .d-card .d-time { color: #3D8EF7; }
 </style>
 
-<script>
-// Garantir que os indicadores visuais funcionem
-document.addEventListener('DOMContentLoaded', function() {
-    // Forçar atualização visual ao carregar (para o 2 minutos que vem checked)
-    const checkedDuracao = document.querySelector('.duracao-radio:checked');
-    if (checkedDuracao) {
-        checkedDuracao.dispatchEvent(new Event('change'));
-    }
-});
-</script>
-@endsection
-
-
-@section('scripts')
-<script>
-// Custom duration handler
-document.addEventListener('DOMContentLoaded', function() {
-    const customInput = document.getElementById('duracao-custom');
-    const btnApply = document.getElementById('btn-apply-custom');
-    const duracaoRadios = document.querySelectorAll('.duracao-radio');
-    
-    if (btnApply && customInput) {
-        btnApply.addEventListener('click', function() {
-            const customValue = parseInt(customInput.value);
-            
-            if (!customValue || customValue < 10) {
-                alert('Por favor, insira um valor mínimo de 10 segundos');
-                return;
-            }
-            
-            if (customValue > 600) {
-                alert('O tempo máximo é 600 segundos (10 minutos)');
-                return;
-            }
-            
-            // Desmarcar todos os radios
-            duracaoRadios.forEach(radio => radio.checked = false);
-            
-            // Criar um input hidden com o valor personalizado
-            let hiddenInput = document.querySelector('input[name="duracao"][type="hidden"]');
-            if (!hiddenInput) {
-                hiddenInput = document.createElement('input');
-                hiddenInput.type = 'hidden';
-                hiddenInput.name = 'duracao';
-                customInput.parentElement.appendChild(hiddenInput);
-            }
-            hiddenInput.value = customValue;
-            
-            // Feedback visual
-            btnApply.textContent = '✓ Aplicado';
-            btnApply.classList.add('bg-green-500');
-            btnApply.classList.remove('bg-[#0667DA]');
-            
-            setTimeout(() => {
-                btnApply.textContent = 'Aplicar';
-                btnApply.classList.remove('bg-green-500');
-                btnApply.classList.add('bg-[#0667DA]');
-            }, 2000);
-        });
-    }
-});
-</script>
 @endsection

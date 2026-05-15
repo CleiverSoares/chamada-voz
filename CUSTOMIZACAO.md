@@ -56,13 +56,13 @@ public function selecionar()
 {
     $personas = [
         'seu_mario' => [
-            'nome' => 'Seu Mário',
+            'nome' => 'Antônio',
             'descricao' => 'Dono de supermercado de bairro. Apressado, desconfiado e focado em custos.',
             'dificuldade' => 'Difícil',
-            'assistant_id' => env('VAPI_ASSISTANT_SEU_MARIO'),
+            'assistant_id' => env('VAPI_ASSISTANT_SEU_ANTONIO'),
         ],
         'dona_sonia' => [
-            'nome' => 'Dona Sônia',
+            'nome' => 'Sônia',
             'descricao' => 'Gerente de loja de roupas. Cética com tecnologia e preocupada com treinamento.',
             'dificuldade' => 'Muito Difícil',
             'assistant_id' => env('VAPI_ASSISTANT_DONA_SONIA'),
@@ -89,11 +89,11 @@ public function combate(Simulacao $simulacao)
     
     $personas = [
         'seu_mario' => [
-            'nome' => 'Seu Mário',
-            'assistant_id' => env('VAPI_ASSISTANT_SEU_MARIO'),
+            'nome' => 'Antônio',
+            'assistant_id' => env('VAPI_ASSISTANT_SEU_ANTONIO'),
         ],
         'dona_sonia' => [
-            'nome' => 'Dona Sônia',
+            'nome' => 'Sônia',
             'assistant_id' => env('VAPI_ASSISTANT_DONA_SONIA'),
         ],
         // ADICIONE AQUI
@@ -384,7 +384,7 @@ Configure no assistente da Vapi em **Voice Settings**.
 
 ### Criar Variações da Mesma Persona
 
-**Exemplo: Seu Mário - Fácil, Médio, Difícil**
+**Exemplo: Antônio - Fácil, Médio, Difícil**
 
 1. Crie 3 assistentes na Vapi
 2. Ajuste o System Prompt:

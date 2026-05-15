@@ -26,7 +26,7 @@ O funcionamento do sistema é dividido em 4 fases cronológicas. Nenhuma chamada
 ### Fase 1: Preparação e Setup (Laravel)
 
 1. O vendedor faz login na aplicação Laravel.
-2. Acessa a tela inicial e escolhe a **Persona** que deseja enfrentar (ex: Seu Mário do Varejo).
+2. Acessa a tela inicial e escolhe a **Persona** que deseja enfrentar (ex: Antônio do Varejo).
 3. O Laravel cria um registro na tabela `simulacoes` com o status `em_andamento` e redireciona o usuário para a rota da "Arena de Combate".
 
 ### Fase 2: O Combate (Navegador + Vapi SDK)
@@ -69,7 +69,7 @@ Configurado com `gpt-4o-mini` para respostas rápidas e custo baixíssimo.
 A instrução de como a IA deve agir.
 
 **Exemplo de Prompt:**
-> "Você é o Seu Mário, dono de um supermercado de bairro. Você tem pouco tempo, margem de lucro baixa e acha softwares de gestão caros. Atenda o telefone com pressa. Tente encerrar a ligação rápido. Só aceite agendar uma demonstração se o vendedor focar em falar sobre agilidade no caixa e redução de perdas de estoque."
+> "Você é o Antônio, dono de um supermercado de bairro. Você tem pouco tempo, margem de lucro baixa e acha softwares de gestão caros. Atenda o telefone com pressa. Tente encerrar a ligação rápido. Só aceite agendar uma demonstração se o vendedor focar em falar sobre agilidade no caixa e redução de perdas de estoque."
 
 ### Server URL (Webhook)
 Apontado para a URL pública do seu projeto Laravel (via Ngrok para testes locais ou domínio de produção) para enviar os relatórios pós-chamada.
@@ -85,6 +85,6 @@ VAPI_PUBLIC_KEY="pk_live_suachavepublicaaqui"
 VAPI_PRIVATE_KEY="sk_live_suachaveprivadaaqui"
 
 # IDs das personas criadas no painel da Vapi
-VAPI_ASSISTANT_SEU_MARIO="12345-abcde-id-do-mario"
+VAPI_ASSISTANT_SEU_ANTONIO="12345-abcde-id-do-mario"
 VAPI_ASSISTANT_DONA_SONIA="67890-fghij-id-da-sonia"
 ```

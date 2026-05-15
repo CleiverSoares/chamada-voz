@@ -45,7 +45,7 @@ VAPI_PUBLIC_KEY="sua_chave_publica_aqui"
 VAPI_PRIVATE_KEY="sua_chave_privada_aqui"
 
 # IDs dos assistentes criados no painel da Vapi
-VAPI_ASSISTANT_SEU_MARIO="id_do_assistente_mario"
+VAPI_ASSISTANT_SEU_ANTONIO="id_do_assistente_mario"
 VAPI_ASSISTANT_DONA_SONIA="id_do_assistente_sonia"
 ```
 
@@ -79,16 +79,16 @@ Vá para [dashboard.vapi.ai](https://dashboard.vapi.ai) e faça login.
 
 ### 2. Crie os Assistentes
 
-#### Assistente 1: Seu Mário
+#### Assistente 1: Antônio
 
 **Configurações:**
-- **Nome:** Seu Mário - Supermercado
+- **Nome:** Antônio - Supermercado
 - **Model:** gpt-4o-mini
 - **Voice:** Escolha uma voz masculina em português (ex: pt-BR-AntonioNeural)
 
 **System Prompt:**
 ```
-Você é o Seu Mário, dono de um supermercado de bairro há 15 anos. 
+Você é o Antônio, dono de um supermercado de bairro há 15 anos. 
 
 PERSONALIDADE:
 - Você é apressado, desconfiado e direto
@@ -122,16 +122,16 @@ https://seu-dominio.com/api/webhooks/vapi
 ```
 (Use ngrok para testes locais: `ngrok http 8000`)
 
-#### Assistente 2: Dona Sônia
+#### Assistente 2: Sônia
 
 **Configurações:**
-- **Nome:** Dona Sônia - Loja de Roupas
+- **Nome:** Sônia - Loja de Roupas
 - **Model:** gpt-4o-mini
 - **Voice:** Escolha uma voz feminina em português (ex: pt-BR-FranciscaNeural)
 
 **System Prompt:**
 ```
-Você é a Dona Sônia, gerente de uma loja de roupas femininas no shopping.
+Você é a Sônia, gerente de uma loja de roupas femininas no shopping.
 
 PERSONALIDADE:
 - Cética com tecnologia ("não entendo dessas coisas")
@@ -158,7 +158,7 @@ OBJEÇÕES COMUNS:
 - "Vai atrapalhar o atendimento dos clientes"
 - "E se der problema? Quem resolve?"
 
-Seja ainda mais difícil que o Seu Mário. Exija paciência e didática do vendedor.
+Seja ainda mais difícil que o Antônio. Exija paciência e didática do vendedor.
 ```
 
 **Server URL (Webhook):**
@@ -171,7 +171,7 @@ https://seu-dominio.com/api/webhooks/vapi
 Após criar cada assistente, copie o ID (formato: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx`) e cole no `.env`:
 
 ```env
-VAPI_ASSISTANT_SEU_MARIO="id-copiado-do-painel"
+VAPI_ASSISTANT_SEU_ANTONIO="id-copiado-do-painel"
 VAPI_ASSISTANT_DONA_SONIA="id-copiado-do-painel"
 ```
 

@@ -26,18 +26,18 @@ VAPI_PRIVATE_KEY="sua_private_key_aqui"
 
 #### Passo 3: Criar os Assistentes (Personas)
 
-##### Assistente 1: Seu Mário
+##### Assistente 1: Antônio
 
 1. No dashboard da Vapi, clique em **Create Assistant**
 2. Preencha:
-   - **Name:** Seu Mário
+   - **Name:** Antônio
    - **Model:** gpt-4o-mini
    - **Voice:** Escolha uma voz masculina em português (ex: `pt-BR-AntonioNeural`)
    
 3. **System Prompt** (cole exatamente):
 
 ```
-Você é o Seu Mário, dono de um supermercado de bairro há 15 anos. 
+Você é o Antônio, dono de um supermercado de bairro há 15 anos. 
 
 PERSONALIDADE:
 - Você é apressado, desconfiado e direto
@@ -71,21 +71,21 @@ Seja realista e difícil, mas não impossível. Se o vendedor for bom, aceite ag
 7. Cole no `.env`:
 
 ```env
-VAPI_ASSISTANT_SEU_MARIO="id_copiado_aqui"
+VAPI_ASSISTANT_SEU_ANTONIO="id_copiado_aqui"
 ```
 
-##### Assistente 2: Dona Sônia
+##### Assistente 2: Sônia
 
 Repita o processo acima com:
 
-- **Name:** Dona Sônia
+- **Name:** Sônia
 - **Model:** gpt-4o-mini
 - **Voice:** Voz feminina em português (ex: `pt-BR-FranciscaNeural`)
 
 **System Prompt:**
 
 ```
-Você é a Dona Sônia, gerente de uma loja de roupas femininas no shopping.
+Você é a Sônia, gerente de uma loja de roupas femininas no shopping.
 
 PERSONALIDADE:
 - Cética com tecnologia ("não entendo dessas coisas")
@@ -112,7 +112,7 @@ OBJEÇÕES COMUNS:
 - "Vai atrapalhar o atendimento dos clientes"
 - "E se der problema? Quem resolve?"
 
-Seja ainda mais difícil que o Seu Mário. Exija paciência e didática do vendedor.
+Seja ainda mais difícil que o Antônio. Exija paciência e didática do vendedor.
 ```
 
 Cole o ID no `.env`:
@@ -164,7 +164,7 @@ Acesse: **http://localhost:8000**
 1. Abra o navegador em `http://localhost:8000`
 2. Clique em **"Começar Treinamento"**
 3. Digite seu nome
-4. Selecione **"Seu Mário"**
+4. Selecione **"Antônio"**
 5. Clique em **"Iniciar Simulação"**
 6. Permita o acesso ao microfone
 7. Clique em **"Iniciar Chamada"**
@@ -174,14 +174,14 @@ Acesse: **http://localhost:8000**
 
 ## 🎯 Dicas para um Bom Desempenho
 
-### Com o Seu Mário:
+### Com o Antônio:
 - Seja direto e objetivo
 - Foque em economia de tempo e dinheiro
 - Mencione ROI rápido
 - Fale sobre facilidade de uso
 - Ofereça demonstração prática
 
-### Com a Dona Sônia:
+### Com a Sônia:
 - Seja paciente e didático
 - Explique de forma simples
 - Fale sobre suporte e treinamento
@@ -215,7 +215,7 @@ Acesse: **http://localhost:8000**
 ✅ Deve mostrar "Sala de Perigo" com botão azul
 
 ### Teste 2: Seleção de persona funciona?
-✅ Deve mostrar cards do Seu Mário e Dona Sônia
+✅ Deve mostrar cards do Antônio e Sônia
 
 ### Teste 3: Arena de combate abre?
 ✅ Deve pedir permissão de microfone
