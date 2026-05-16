@@ -31,7 +31,7 @@ class VapiWebhookController extends Controller
             if (!$resultado) {
                 $outputs = data_get($payload, 'message.artifact.structuredOutputs', []);
                 foreach ($outputs as $output) {
-                    if (isset($output['result']['score'])) {
+                    if (isset($output['result']['score']) || isset($output['result']['score_empatia'])) {
                         $resultado = $output['result'];
                         break;
                     }
@@ -41,7 +41,7 @@ class VapiWebhookController extends Controller
             Log::info('Webhook recebido', [
                 'call_id' => $callId, 
                 'type' => $type,
-                'tem_analise' => !empty($resultado) && isset($resultado['score'])
+                'tem_analise' => !empty($resultado) && (isset($resultado['score']) || isset($resultado['score_empatia']))
             ]);
             
             // Calcular duração
@@ -58,10 +58,20 @@ class VapiWebhookController extends Controller
 
             if ($simulacao) {
                 // PEGAR OS DADOS DA ANÁLISE DA VAPI (se veio)
-                if ($resultado && isset($resultado['score'])) {
-                    $score = $resultado['score'];
-                    $pontosPositivos = $resultado['pontos_positivos'] ?? 'Sem feedback positivo.';
-                    $pontosMelhoria = $resultado['pontos_melhoria'] ?? 'Sem feedback de melhoria.';
+                if ($resultado && (isset($resultado['score']) || isset($resultado['score_empatia']))) {
+                    // Se a Vapi mandou as 4 dimensões (score_empatia, etc), calculamos a média para o score principal
+                    if (isset($resultado['score_empatia'])) {
+                        $e = $resultado['score_empatia'] ?? 0;
+                        $c = $resultado['score_conhecimento'] ?? 0;
+                        $o = $resultado['score_objecao'] ?? 0;
+                        $f = $resultado['score_fechamento'] ?? 0;
+                        $score = round(($e + $c + $o + $f) / 4);
+                    } else {
+                        $score = $resultado['score'] ?? 50;
+                    }
+                    
+                    $pontosPositivos = $resultado['pontos_positivos'] ?? 'Boa tentativa de interação.';
+                    $pontosMelhoria = $resultado['pontos_melhoria'] ?? 'Análise detalhada não fornecida pela inteligência.';
                     $fonteAnalise = 'Vapi IA';
                 } else {
                     // Fallback automático
@@ -79,7 +89,12 @@ class VapiWebhookController extends Controller
                     'status' => 'concluido',
                     'call_id' => $callId,
                     'transcricao' => $transcript ?: 'Transcrição não disponível',
+                    'transcricao_json' => json_encode($request->input('message.artifact.messages', [])),
                     'score' => $score,
+                    'score_empatia' => $resultado['score_empatia'] ?? null,
+                    'score_conhecimento' => $resultado['score_conhecimento'] ?? null,
+                    'score_objecao' => $resultado['score_objecao'] ?? null,
+                    'score_fechamento' => $resultado['score_fechamento'] ?? null,
                     'pontos_positivos' => $pontosPositivos,
                     'pontos_melhoria' => $pontosMelhoria,
                     'recording_url' => $recordingUrl,

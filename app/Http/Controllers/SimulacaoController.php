@@ -9,6 +9,9 @@ class SimulacaoController extends Controller
 {
     public static function nomePersona(string $key): string
     {
+        $p = \App\Models\Persona::where('chave', $key)->first();
+        if ($p) return $p->nome;
+
         return match($key) {
             'seu_mario'              => 'Antônio',
             'dona_sonia'             => 'Sônia',
@@ -19,6 +22,9 @@ class SimulacaoController extends Controller
 
     public static function emojiPersona(string $key): string
     {
+        $p = \App\Models\Persona::where('chave', $key)->first();
+        if ($p) return $p->emoji;
+
         return match($key) {
             'seu_mario'              => '🏪',
             'dona_sonia'             => '👩‍💼',
@@ -34,26 +40,19 @@ class SimulacaoController extends Controller
 
     public function selecionar()
     {
-        $personas = [
-            'seu_mario' => [
-                'nome' => 'Antônio',
-                'descricao' => 'Dono de supermercado de bairro. Apressado, desconfiado e focado em custos.',
-                'dificuldade' => 'Difícil',
-                'assistant_id' => env('VAPI_ASSISTANT_SEU_ANTONIO'),
-            ],
-            'dona_sonia' => [
-                'nome' => 'Sônia',
-                'descricao' => 'Contadora de 58 anos. Metódica, educada, mas resistente a mudanças. Usa vários sistemas separados.',
-                'dificuldade' => 'Muito Difícil',
-                'assistant_id' => env('VAPI_ASSISTANT_DONA_SONIA'),
-            ],
-            'flavio_academia_vendas' => [
-                'nome' => 'Flávio — Mentor Elite',
-                'descricao' => 'Mentor da Academia de Vendas Alterdata. Treina pitch, simula clientes sob demanda e dá feedback cirúrgico em tempo real.',
-                'dificuldade' => 'Treinamento',
-                'assistant_id' => env('VAPI_ASSISTANT_FLAVIO_ACAD_VENDAS'),
-            ],
-        ];
+        $personasCollection = \App\Models\Persona::all();
+        $personas = [];
+        
+        foreach ($personasCollection as $p) {
+            $personas[$p->chave] = [
+                'id' => $p->id,
+                'nome' => $p->nome,
+                'descricao' => $p->descricao,
+                'dificuldade' => $p->dificuldade,
+                'assistant_id' => $p->assistant_id,
+                'emoji' => $p->emoji,
+            ];
+        }
 
         return view('selecionar', compact('personas'));
     }
@@ -82,24 +81,11 @@ class SimulacaoController extends Controller
             return redirect()->route('resultado', $simulacao->id);
         }
 
-        $personas = [
-            'seu_mario' => [
-                'nome' => 'Antônio',
-                'assistant_id' => env('VAPI_ASSISTANT_SEU_ANTONIO'),
-            ],
-            'dona_sonia' => [
-                'nome' => 'Sônia',
-                'assistant_id' => env('VAPI_ASSISTANT_DONA_SONIA'),
-            ],
-            'flavio_academia_vendas' => [
-                'nome' => 'Flávio Academia de Vendas',
-                'assistant_id' => env('VAPI_ASSISTANT_FLAVIO_ACAD_VENDAS'),
-            ],
-        ];
+        $p = \App\Models\Persona::where('chave', $simulacao->persona)->first();
 
-        $personaData = $personas[$simulacao->persona] ?? [
-            'nome' => ucfirst(str_replace('_', ' ', $simulacao->persona)),
-            'assistant_id' => null,
+        $personaData = [
+            'nome' => $p ? $p->nome : ucfirst(str_replace('_', ' ', $simulacao->persona)),
+            'assistant_id' => $p ? $p->assistant_id : null,
         ];
 
         return view('combate', [
@@ -140,6 +126,40 @@ class SimulacaoController extends Controller
             'total_tempo' => Simulacao::where('status', 'concluido')->sum('duracao_segundos'),
         ];
         
-        return view('historico', compact('simulacoes', 'estatisticas'));
+        $grafico_evolucao = Simulacao::where('status', 'concluido')
+            ->orderBy('created_at', 'asc')
+            ->take(30)
+            ->get(['score', 'created_at', 'vendedor_nome'])
+            ->map(function($sim) {
+                return [
+                    'score' => $sim->score,
+                    'data' => $sim->created_at->format('d/m'),
+                ];
+            });
+
+        // 1. GAMIFICAÇÃO: Ranking Global com Patentes (XP = soma de todos os scores)
+        $rankingData = Simulacao::select('vendedor_nome')
+            ->selectRaw('MAX(score) as max_score')
+            ->selectRaw('SUM(score) as total_xp')
+            ->selectRaw('COUNT(*) as total_missoes')
+            ->where('status', 'concluido')
+            ->groupBy('vendedor_nome')
+            ->orderByDesc('total_xp')
+            ->limit(10)
+            ->get();
+            
+        $ranking = $rankingData->map(function($r) {
+            $xp = $r->total_xp;
+            if ($xp < 500) $patente = 'Recruta';
+            elseif ($xp < 1500) $patente = 'Soldado de Linha';
+            elseif ($xp < 3000) $patente = 'Combatente Tático';
+            elseif ($xp < 5000) $patente = 'Forças Especiais';
+            else $patente = 'Lenda da Arena';
+            
+            $r->patente = $patente;
+            return $r;
+        });
+        
+        return view('historico', compact('simulacoes', 'estatisticas', 'grafico_evolucao', 'ranking'));
     }
 }

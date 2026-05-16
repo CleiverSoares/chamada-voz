@@ -19,6 +19,11 @@ class Simulacao extends Model
         'call_id',
         'recording_url',
         'duracao_segundos',
+        'transcricao_json',
+        'score_empatia',
+        'score_conhecimento',
+        'score_objecao',
+        'score_fechamento',
     ];
 
     protected $casts = [

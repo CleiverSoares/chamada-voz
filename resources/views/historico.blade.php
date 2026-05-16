@@ -82,6 +82,180 @@
                 <div class="text-xs sm:text-sm text-gray-400">Horas treinadas</div>
             </div>
         </div>
+        
+        <!-- Dashboard Layout: Ranking & Evolution -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
+            
+            <!-- Evolution Chart (2/3 width) -->
+            <div class="lg:col-span-2 dashboard-table-container p-6 flex flex-col min-h-0">
+                <h2 class="text-lg font-black text-white uppercase tracking-tight mb-4 shrink-0">Evolução de Performance</h2>
+                @if(isset($grafico_evolucao) && count($grafico_evolucao) > 0)
+                <div class="w-full flex-1 min-h-[250px]">
+                    <canvas id="evolutionChart"></canvas>
+                </div>
+                @else
+                <div class="flex-1 flex items-center justify-center text-gray-500 text-sm">Sem dados suficientes para o gráfico.</div>
+                @endif
+            </div>
+
+            <!-- Global Ranking (1/3 width) -->
+            <div class="dashboard-table-container flex flex-col min-h-0">
+                <div class="p-6 pb-2 border-b border-white/5 shrink-0 flex items-center justify-between">
+                    <h2 class="text-lg font-black text-white uppercase tracking-tight">Top Agentes</h2>
+                    <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </div>
+                <div class="flex-1 overflow-y-auto p-4 flex flex-col gap-2 max-h-[300px]">
+                    @if(isset($ranking) && count($ranking) > 0)
+                        @foreach($ranking as $index => $rank)
+                        <div class="flex items-center gap-3 bg-white/5 border border-white/5 rounded-xl p-3 hover:bg-white/10 transition-colors">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm shrink-0
+                                {{ $index == 0 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 shadow-[0_0_10px_rgba(234,179,8,0.3)]' : ($index == 1 ? 'bg-gray-400/20 text-gray-300 border border-gray-400/30 shadow-[0_0_10px_rgba(156,163,175,0.2)]' : ($index == 2 ? 'bg-orange-700/20 text-orange-400 border border-orange-700/30 shadow-[0_0_10px_rgba(194,65,12,0.2)]' : 'bg-white/5 text-gray-500')) }}">
+                                {{ $index + 1 }}º
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="text-white font-bold text-sm truncate flex items-center gap-2">
+                                    {{ $rank->vendedor_nome }}
+                                    @if($index == 0)<span class="text-[10px] bg-yellow-500 text-black px-1.5 py-0.5 rounded-sm font-black uppercase tracking-widest">MVP</span>@endif
+                                </div>
+                                <div class="text-[10px] text-gray-400 font-bold uppercase tracking-wider flex items-center gap-1.5 mt-0.5">
+                                    <span class="{{ $rank->patente == 'Lenda da Arena' ? 'text-purple-400' : ($rank->patente == 'Forças Especiais' ? 'text-red-400' : ($rank->patente == 'Combatente Tático' ? 'text-blue-400' : 'text-gray-400')) }}">⚔️ {{ $rank->patente }}</span>
+                                    <span class="text-white/20">•</span>
+                                    <span>{{ $rank->total_missoes }} Missões</span>
+                                </div>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <div class="text-emerald-400 font-black text-lg leading-none">{{ number_format($rank->total_xp, 0, ',', '.') }}</div>
+                                <div class="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Total XP</div>
+                            </div>
+                        </div>
+                        @endforeach
+                    @else
+                        <div class="text-center text-gray-500 text-sm py-8">Nenhum agente no ranking.</div>
+                    @endif
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Dashboard Layout: Second Row (Badges & Objections) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
+            
+            <!-- Badges (2/3 width) -->
+            <div class="lg:col-span-2 dashboard-table-container p-6 flex flex-col min-h-0">
+                <div class="pb-2 border-b border-white/5 shrink-0 flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-black text-white uppercase tracking-tight">Suas Conquistas</h2>
+                </div>
+                <div class="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="flex flex-col items-center justify-center text-center p-4 bg-white/5 rounded-xl border border-white/10 hover:border-yellow-500/50 transition-colors">
+                        <span class="text-4xl mb-2 filter drop-shadow-[0_0_15px_rgba(234,179,8,.5)]">🎖️</span>
+                        <span class="text-white font-bold text-sm">Quebra-Gelo</span>
+                        <span class="text-gray-500 text-[10px] uppercase mt-1">Converteu em < 30s</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center text-center p-4 bg-white/5 rounded-xl border border-white/10 hover:border-blue-500/50 transition-colors">
+                        <span class="text-4xl mb-2 filter drop-shadow-[0_0_15px_rgba(59,130,246,.5)]">🛡️</span>
+                        <span class="text-white font-bold text-sm">Mestre da Objeção</span>
+                        <span class="text-gray-500 text-[10px] uppercase mt-1">100% contra Extremo</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center text-center p-4 bg-white/5 rounded-xl border border-white/10 hover:border-emerald-500/50 transition-colors opacity-50 grayscale">
+                        <span class="text-4xl mb-2 filter drop-shadow-[0_0_15px_rgba(16,185,129,.5)]">🥇</span>
+                        <span class="text-white font-bold text-sm">O Intocável</span>
+                        <span class="text-gray-500 text-[10px] uppercase mt-1">5 Vitórias Seguidas</span>
+                    </div>
+                    <div class="flex flex-col items-center justify-center text-center p-4 bg-white/5 rounded-xl border border-white/10 hover:border-purple-500/50 transition-colors opacity-50 grayscale">
+                        <span class="text-4xl mb-2 filter drop-shadow-[0_0_15px_rgba(168,85,247,.5)]">🎯</span>
+                        <span class="text-white font-bold text-sm">Fechador</span>
+                        <span class="text-gray-500 text-[10px] uppercase mt-1">Score Max no Fechamento</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objections Word Cloud (1/3 width) -->
+            <div class="dashboard-table-container p-6 flex flex-col min-h-0">
+                <div class="pb-2 border-b border-white/5 shrink-0 flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-black text-white uppercase tracking-tight">Radar de Objeções</h2>
+                </div>
+                <div class="flex-1 flex flex-wrap content-start gap-2 pt-2">
+                    <span class="px-3 py-1 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-base font-black">"Tá muito caro"</span>
+                    <span class="px-3 py-1 bg-orange-500/20 text-orange-400 border border-orange-500/30 rounded-full text-xs font-bold">"Sem tempo"</span>
+                    <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 rounded-full text-lg font-black">"Já uso outro"</span>
+                    <span class="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-[10px] font-bold">"Manda por email"</span>
+                    <span class="px-3 py-1 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-full text-sm font-bold">"Vou pensar"</span>
+                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold">"Falo com o sócio"</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Desafio da Semana -->
+        <div class="dashboard-table-container p-8 mb-8 sm:mb-12 border-purple-500/30 relative overflow-hidden flex flex-col sm:flex-row items-center sm:items-start gap-6 justify-between" style="background: linear-gradient(135deg, rgba(88,28,135,0.4) 0%, rgba(10,14,39,0.9) 100%);">
+            <div class="absolute -right-10 -top-10 text-9xl opacity-10 select-none">🏆</div>
+            <div class="relative z-10 text-center sm:text-left">
+                <h2 class="text-xs font-black text-purple-400 uppercase tracking-widest mb-1">🔥 Desafio da Semana</h2>
+                <h3 class="text-2xl font-black text-white mb-2">A Venda Sem Desconto</h3>
+                <p class="text-gray-400 text-sm max-w-2xl mb-0">O cliente "Sr. Pechincha" exige 30% de desconto. Sua missão é fechar a venda usando apenas valor agregado, sem conceder nenhum centavo! Você tem 2 minutos.</p>
+            </div>
+            <a href="{{ route('selecionar') }}?desafio=1" class="relative z-10 shrink-0 flex items-center gap-2 px-8 py-3 bg-purple-600 hover:bg-purple-500 text-white font-black text-sm uppercase tracking-widest rounded-xl transition-all hover:scale-105 shadow-[0_0_20px_rgba(147,51,234,.4)]">
+                Aceitar Desafio
+            </a>
+        </div>
+        
+        @if(isset($grafico_evolucao) && count($grafico_evolucao) > 0)
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ctx = document.getElementById('evolutionChart').getContext('2d');
+                
+                // Gradiente para a linha
+                let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, 'rgba(6, 103, 218, 0.5)');
+                gradient.addColorStop(1, 'rgba(6, 103, 218, 0.0)');
+
+                const rawData = @json($grafico_evolucao);
+                const labels = rawData.map(d => d.data);
+                const data = rawData.map(d => d.score);
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Score Geral',
+                            data: data,
+                            borderColor: '#3D8EF7',
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#0667DA',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: { color: 'rgba(255, 255, 255, 0.05)', drawBorder: false },
+                                ticks: { color: 'rgba(255, 255, 255, 0.5)' }
+                            },
+                            x: {
+                                grid: { display: false, drawBorder: false },
+                                ticks: { color: 'rgba(255, 255, 255, 0.5)', maxTicksLimit: 10 }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+        @endif
 
         @if($simulacoes->count() > 0)
         <!-- Mission Log Table -->

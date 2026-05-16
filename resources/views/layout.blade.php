@@ -8,6 +8,28 @@
     <title>@yield('title', 'Arena de Combate - Alterdata')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @yield('styles')
+    <style>
+        /* SCROLLBAR PERSONALIZADA */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(6, 9, 24, 0.8);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(6, 103, 218, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(6, 103, 218, 0.6);
+        }
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(6, 103, 218, 0.3) rgba(6, 9, 24, 0.8);
+        }
+    </style>
 </head>
 <body class="bg-[#0a0e27] text-white @yield('body-class', '')">
     <!-- Floating Navigation -->
